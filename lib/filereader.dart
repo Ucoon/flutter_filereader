@@ -15,6 +15,10 @@ class FileReader {
 
   FileReader._();
 
+  Future<void> initSdk(String licenseKey) async {
+    await _channel.invokeMethod('init', {'licenseKey': licenseKey});
+  }
+
   //X5 engin  load state
   // -1 loading  5 success 10 fail
   void engineLoadStatus(Function(bool)? loadCallback) async {

@@ -3,7 +3,6 @@ version '1.0-SNAPSHOT'
 buildscript {
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
 
@@ -14,8 +13,10 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
+        flatDir {
+            dirs project(':flutter_filereader').file('libs')
+        }
     }
 }
 apply plugin: 'com.android.library'
@@ -23,7 +24,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
     }
     lintOptions {
         disable 'InvalidPackage'
@@ -40,10 +41,5 @@ android {
 }
 
 dependencies {
-    //43903开始 支持文件打开和webview，支持64位，修复稳定性问题
-    //44065还没发布到厂库
-    //api 'com.tencent.tbs.tbssdk:sdk:43939'
-
-    api fileTree(include: ['*.jar'], dir: 'libs')
-
+    implementation(name: 'TbsFileSdk_base_armeabi_release_1.0.5.6000018', ext: 'aar')
 }

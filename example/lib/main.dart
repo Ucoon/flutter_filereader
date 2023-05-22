@@ -8,8 +8,14 @@ import 'package:flutter_filereader_example/file.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_filereader/filereader.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FileReader().initSdk(
+      'baEH0Rr2SaIb8eBaiiSLePSASgXaLJMUzpi7CwV6u+13UokLLYdP06331HUrIDsEJ18M7JuXDA6FKatkE/woGQ==');
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -83,7 +89,8 @@ class _HomePageState extends State<HomePage> {
       ),
       body: ListView.builder(
         itemBuilder: (ctx, index) {
-          return item(files.keys.elementAt(index), files.values.elementAt(index));
+          return item(
+              files.keys.elementAt(index), files.values.elementAt(index));
         },
         itemCount: files.length,
       ),

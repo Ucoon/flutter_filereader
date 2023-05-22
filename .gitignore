@@ -4,6 +4,7 @@
 .packages
 .pub/
 .idea
+.fvm
 
 build/
 /example/pubspec.lock
