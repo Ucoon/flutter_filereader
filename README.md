@@ -36,8 +36,21 @@ Make sure you add the following key to Info.plist for iOS
 ```
 <key>io.flutter.embedded_views_preview</key><true/>
 ```
- 
+
 ### Example
+
+1. Initialize SDK
+
+   ```dart
+   void main() async {
+     WidgetsFlutterBinding.ensureInitialized();
+     await FileReader().initSdk('licenseKey');
+     runApp(MyApp());
+   }
+   ```
+
+2. FileReaderView
+
 ```
 import 'package:flutter/material.dart';
 import 'package:flutter_filereader/flutter_filereader.dart';
@@ -71,4 +84,9 @@ class _FileReaderPageState extends State<FileReaderPage> {
 1. Not Support GooglePlay
 2. 不支持在Android模拟器上运行
 3. txt文档如果显示乱码,请将txt文档编码改成gbk
+4. 由于TBS SDK即将下线，新版插件将引用腾讯浏览服务SDK，具体接入参考[ 腾讯浏览服务SDK 接入指南](https://cloud.tencent.com/document/product/1645/83900)
 
+## 参考
+
+- [腾讯浏览服务](https://cloud.tencent.com/document/product/1645)
+- [关于腾讯浏览服务内核SDK-内核文档能力调整公告](https://mp.weixin.qq.com/s/rmSa4Fs77MDdjFioRKwXPA)
