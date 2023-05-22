@@ -10,6 +10,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.tencent.tbs.reader.ITbsReader;
+import com.tencent.tbs.reader.ITbsReaderCallback;
 import com.tencent.tbs.reader.TbsFileInterfaceImpl;
 
 import java.util.Objects;
@@ -73,11 +74,14 @@ public class FlutterFileReaderPlugin implements MethodChannel.MethodCallHandler,
     private void initEngineAsync(Context context, String licenseKey) {
         //调用该接口设置LicenseKey, 才能初始化SDK
         TbsFileInterfaceImpl.setLicenseKey(licenseKey);
-        TbsFileInterfaceImpl.initEngineAsync(context, (actionType, args, result) -> {
-            Log.i(TAG, "actionType=" + actionType + "，args=" + args + "，result=" + result);
-            if (ITbsReader.OPEN_FILEREADER_ASYNC_LOAD_READER_ENTRY_CALLBACK == actionType) {
-                Log.e(TAG, "异步加载SDK结束. 加载SDK" + ((int) args == 0 ? "成功" : "失败"));
-                onX5LoadComplete();
+        TbsFileInterfaceImpl.initEngineAsync(context, new ITbsReaderCallback() {
+            @Override
+            public void onCallBackAction(Integer actionType, Object args, Object result) {
+                Log.i(TAG, "actionType=" + actionType + "，args=" + args + "，result=" + result);
+                if (ITbsReader.OPEN_FILEREADER_ASYNC_LOAD_READER_ENTRY_CALLBACK == actionType) {
+                    Log.e(TAG, "异步加载SDK结束. 加载SDK" + ((int) args == 0 ? "成功" : "失败"));
+                    onX5LoadComplete();
+                }
             }
         });
     }
@@ -114,13 +118,16 @@ public class FlutterFileReaderPlugin implements MethodChannel.MethodCallHandler,
             param.putString("fileExt", fileExt);
             param.putString("tempPath", Objects.requireNonNull(ctx.getExternalFilesDir("temp")).getAbsolutePath());
             if (!TbsFileInterfaceImpl.canOpenFileExt(fileExt)) return false;
-            TbsFileInterfaceImpl.getInstance().openFileReader(ctx, param, (actionType, args, resultObj) -> {
-                Log.i(TAG, "actionType=" + actionType + "，args=" + args + "，result=" + resultObj);
-                if (ITbsReader.OPEN_FILEREADER_STATUS_UI_CALLBACK == actionType) {
-                    if (args instanceof Bundle) {
-                        int id = ((Bundle) args).getInt("typeId");
-                        if (ITbsReader.TBS_READER_TYPE_STATUS_UI_SHUTDOWN == id) {
-                            TbsFileInterfaceImpl.getInstance().closeFileReader();
+            TbsFileInterfaceImpl.getInstance().openFileReader(ctx, param, new ITbsReaderCallback() {
+                @Override
+                public void onCallBackAction(Integer actionType, Object args, Object result) {
+                    Log.i(TAG, "actionType=" + actionType + "，args=" + args + "，result=" + result);
+                    if (ITbsReader.OPEN_FILEREADER_STATUS_UI_CALLBACK == actionType) {
+                        if (args instanceof Bundle) {
+                            int id = ((Bundle) args).getInt("typeId");
+                            if (ITbsReader.TBS_READER_TYPE_STATUS_UI_SHUTDOWN == id) {
+                                TbsFileInterfaceImpl.getInstance().closeFileReader();
+                            }
                         }
                     }
                 }

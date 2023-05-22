@@ -75,12 +75,15 @@ public class X5FileReaderView implements PlatformView, ITbsReaderCallback, Metho
             param.putString("fileExt", FilenameUtils.getExtension(filePath));
             param.putString("tempPath", tempPath);
             //调用openFileReader打开文件
-            readerView.post(() -> {
-                int height = readerView.getHeight();
-                // 自定义layout模式必须设置这个值，否则可能导致文档内容显示不全
-                param.putInt("set_content_view_height", height);
-                TbsFileInterfaceImpl.getInstance().openFileReader(
-                        readerView.getContext(), param, X5FileReaderView.this, readerView);
+            readerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    int height = readerView.getHeight();
+                    // 自定义layout模式必须设置这个值，否则可能导致文档内容显示不全
+                    param.putInt("set_content_view_height", height);
+                    TbsFileInterfaceImpl.getInstance().openFileReader(
+                            readerView.getContext(), param, X5FileReaderView.this, readerView);
+                }
             });
 
         }
